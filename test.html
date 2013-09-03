@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test inflections </title>
+	<style type="text/css">
+		body {
+			font-family: arial, sans-serif;
+		}
+		.message {
+			font-weight: bold;
+		}
+		.error, .success {
+			margin: 0.25em 0;
+		}
+		.error {
+			color: #c00;
+		}
+		.success {
+			color: #0c0;
+		}
+	</style>
+	<script src="http://yui.yahooapis.com/3.12.0/build/yui/yui-min.js"></script>
+	<script type="text/javascript" src="yui-inflection.js"></script>
+	<script type="text/javascript">
+		YUI().use( 'test', 'node', 'yui-inflection', function (Y) {
+			var testWords = {
+				'pluralize': [
+					{'test':'cow', 'expect':'cows'},
+					{'test':'miss', 'expect':'misses'},
+					{'test':'mouse', 'expect':'mice'},
+					{'test':'house', 'expect':'houses'},
+					{'test':'matrix', 'expect':'matrices'},
+					{'test':'sheep', 'expect':'sheep'},
+					{'test':'fish', 'expect':'fish'}
+				],
+				'singularize': [
+					{'test':'cows', 'expect':'cow'},
+					{'test':'misses', 'expect':'miss'},
+					{'test':'miss', 'expect':'miss'},
+					{'test':'mice', 'expect':'mouse'},
+					{'test':'houses', 'expect':'house'},
+					{'test':'matrices', 'expect':'matrix'},
+					{'test':'sheep', 'expect':'sheep'},
+					{'test':'fish', 'expect':'fish'}
+				]
+			},
+			inflector = new Y.Inflection(),
+			output = Y.one('#output');
+
+			/**
+			 *
+			 * @param message
+			 * @param messageClass
+			 */
+			function log(message, messageClass){
+				output.appendChild(Y.Node.create('<p class="' + messageClass + '">'+ message +'</p>'));
+			}
+
+			/**
+			 *
+			 * @param item
+			 * @param testFunction
+			 */
+			function test(item, testFunction){
+				try {
+					Y.assert(testFunction(item.test) === item.expect, 'test: ' + item.test + '  expected: ' + item.expect);
+				} catch (e){
+					log(e.message, 'error');
+					return;
+				}
+				log('test: ' + item.test + '  expected: ' + item.expect, 'success');
+			}
+
+
+			log('Testing pluralize', 'message');
+
+			Y.Array.forEach(testWords.pluralize, function(item){
+				test(item, function(word){return inflector.pluralize(word);});
+			});
+
+
+			log('Testing singularize', 'message');
+
+			Y.Array.forEach(testWords.singularize, function(item){
+				test(item, function(word){return inflector.singularize(word);});
+			});
+
+		});
+	</script>
+</head>
+<body>
+	<div id="output">
+
+	</div>
+</body>
+</html>
