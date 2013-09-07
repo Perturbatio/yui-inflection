@@ -13,10 +13,20 @@
 			margin: 0.25em 0;
 		}
 		.error {
-			color: #c00;
 		}
 		.success {
+		}
+		.success:before {
 			color: #0c0;
+			content: '[success]';
+			font-weight: bold;
+			padding-right: 1em;
+		}
+		.error:before {
+			color: #c00;
+			content: '[failed]';
+			font-weight: bold;
+			padding-right: 1em;
 		}
 	</style>
 	<script src="http://yui.yahooapis.com/3.12.0/build/yui/yui-min.js"></script>
@@ -53,7 +63,7 @@
 			 * @param messageClass
 			 */
 			function log(message, messageClass){
-				output.appendChild(Y.Node.create('<p class="' + messageClass + '">'+ message +'</p>'));
+				output.appendChild(Y.Node.create('<pre class="' + messageClass + '">'+ message +'</pre>'));
 			}
 
 			/**
@@ -62,13 +72,14 @@
 			 * @param testFunction
 			 */
 			function test(item, testFunction){
+				var result = testFunction(item.test);
 				try {
-					Y.assert(testFunction(item.test) === item.expect, 'test: ' + item.test + '  expected: ' + item.expect);
+					Y.assert(result === item.expect, 'test: ' + item.test + ' expected: ' + item.expect + ' result: ' + result);
 				} catch (e){
 					log(e.message, 'error');
 					return;
 				}
-				log('test: ' + item.test + '  expected: ' + item.expect, 'success');
+				log('test: ' + item.test + ' expected: ' + item.expect + ' result: ' + result, 'success');
 			}
 
 
